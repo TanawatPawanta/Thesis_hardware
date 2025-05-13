@@ -1,0 +1,408 @@
+<?xml version="1.0" ?>
+<robot name="hanuman">
+  <!-- <link name="world"/> -->
+  <link name="torso">
+    <inertial>
+      <origin xyz="0.0010004 0.0024033 0.029988"/>
+      <mass value="0.71555"/>
+      <inertia ixx="0.0005017" ixy="6.0521e-08" ixz="-7.3248e-06" iyy="0.00051292" iyz="1.1321e-10" izz="0.00095947"/>
+    </inertial>
+    <visual>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <geometry>
+        <!-- <mesh filename="file:///home/tanawat/Documents/Thesis/Thesis_simulation/Models/hanuman04/meshes/torso.obj"/> -->
+      </geometry>
+    </visual>
+    <collision name="torso">
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <geometry>
+        <!-- <mesh filename="file:///home/tanawat/Documents/Thesis/Thesis_simulation/Models/hanuman04/meshes/torso_collision.obj"/> -->
+      </geometry>
+    </collision>
+  </link>
+  <joint name="JL_hip_y" type="continuous">
+    <parent link="torso"/>
+    <child link="L_hip_connector"/>
+    <origin rpy="3.1416 0 0" xyz="0 0.054 0"/>
+    <dynamics damping="0.5"/>
+    <axis xyz="0 0 1"/>
+    <limit effort="10.0" lower="-3.14152" upper="3.14152" velocity="0.0"/>
+  </joint>
+  <transmission name="trans_JL_hip_y" type="SimpleTransmission">
+    <actuator name="JL_hip_y_motor">
+      <mechanicalReduction>1.0</mechanicalReduction>
+    </actuator>
+    <joint name="JL_hip_y"/>
+  </transmission>
+  <link name="L_hip_connector">
+    <inertial>
+      <origin xyz="0.0038751 -0.00022694 0.0088782"/>
+      <mass value="0.014482"/>
+      <inertia ixx="2.1782e-06" ixy="-4.5664e-11" ixz="-5.8874e-08" iyy="8.134e-06" iyz="-3.0295e-11" izz="7.6708e-06"/>
+    </inertial>
+    <visual>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <geometry>
+        <!-- <mesh filename="file:///home/tanawat/Documents/Thesis/Thesis_simulation/Models/hanuman04/meshes/L_hip_connector.obj"/> -->
+      </geometry>
+    </visual>
+  </link>
+  <joint name="JL_hip_r" type="continuous">
+    <parent link="L_hip_connector"/>
+    <child link="L_hip"/>
+    <origin rpy="0 -1.5708 0" xyz="-0.0235 -0.000 0.03"/>
+    <dynamics damping="0.5"/>
+    <axis xyz="0 0 1"/>
+    <limit effort="10.0" lower="-3.14152" upper="3.14152" velocity="0.0"/>
+  </joint>
+  <transmission name="trans_JL_hip_r" type="SimpleTransmission">
+    <actuator name="JL_hip_r_motor">
+      <mechanicalReduction>1.0</mechanicalReduction>
+    </actuator>
+    <joint name="JL_hip_r"/>
+  </transmission>
+  <link name="L_hip">
+    <inertial>
+      <origin xyz="0.016989 0.00028142 -0.0043984"/>
+      <mass value="0.366"/>
+      <inertia ixx="5.7399e-05" ixy="1.6188e-07" ixz="-1.5552e-07" iyy="8.4262e-05" iyz="-7.6867e-21" izz="8.2055e-05"/>
+    </inertial>
+    <visual>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <geometry>
+        <!-- <mesh filename="file:///home/tanawat/Documents/Thesis/Thesis_simulation/Models/hanuman04/meshes/L_hip.obj"/> -->
+      </geometry>
+    </visual>
+    <collision name="L_hip">
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <geometry>
+        <!-- <mesh filename="file:///home/tanawat/Documents/Thesis/Thesis_simulation/Models/hanuman04/meshes/L_hip_collision.obj"/> -->
+      </geometry>
+    </collision>
+  </link>
+  <joint name="JL_hip_p" type="continuous">
+    <parent link="L_hip"/>
+    <child link="L_thigh"/>
+    <origin rpy="-1.5708 0 0" xyz="0 -0.0 -0.0235"/>
+    <dynamics damping="0.5"/>
+    <axis xyz="0 0 1"/>
+    <limit effort="10.0" lower="-3.14152" upper="3.14152" velocity="0.0"/>
+  </joint>
+  <transmission name="trans_JL_hip_p" type="SimpleTransmission">
+    <actuator name="JL_hip_p_motor">
+      <mechanicalReduction>1.0</mechanicalReduction>
+    </actuator>
+    <joint name="JL_hip_p"/>
+  </transmission>
+  <link name="L_thigh">
+    <inertial>
+      <origin xyz="0.12089 -4.9823E-11 0.00043783"/>
+      <mass value="0.212"/>
+      <inertia ixx="4.9123e-05" ixy="-4.775e-14" ixz="-1.6188e-07" iyy="0.00011016" iyz="-8.2973e-14" izz="8.4534e-05"/>
+    </inertial>
+    <visual>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <geometry>
+        <!-- <mesh filename="file:///home/tanawat/Documents/Thesis/Thesis_simulation/Models/hanuman04/meshes/L_thigh.obj"/> -->
+      </geometry>
+    </visual>
+    <collision name="L_thigh">
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <geometry>
+        <!-- <mesh filename="file:///home/tanawat/Documents/Thesis/Thesis_simulation/Models/hanuman04/meshes/L_thigh_collision.obj"/> -->
+      </geometry>
+    </collision>
+  </link>
+  <joint name="JL_knee" type="continuous">
+    <parent link="L_thigh"/>
+    <child link="L_leg"/>
+    <origin rpy="0 0 0" xyz="0.1605 0 0"/>
+    <dynamics damping="0.5"/>
+    <axis xyz="0 0 1"/>
+    <limit effort="10.0" lower="-3.14152" upper="3.14152" velocity="0.0"/>
+  </joint>
+  <transmission name="trans_JL_knee" type="SimpleTransmission">
+    <actuator name="JL_knee_motor">
+      <mechanicalReduction>1.0</mechanicalReduction>
+    </actuator>
+    <joint name="JL_knee"/>
+  </transmission>
+  <link name="L_leg">
+    <inertial>
+      <origin xyz="0.063002 0.0090996 -0.0005"/>
+      <mass value="0.074194"/>
+      <inertia ixx="5.5482e-05" ixy="1.6295e-05" ixz="-3.1153e-20" iyy="0.00021559" iyz="4.527e-20" izz="0.00018885"/>
+    </inertial>
+    <visual>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <geometry>
+        <!-- <mesh filename="file:///home/tanawat/Documents/Thesis/Thesis_simulation/Models/hanuman04/meshes/L_leg.obj"/> -->
+      </geometry>
+    </visual>
+  </link>
+  <joint name="JL_ankle_p" type="continuous">
+    <parent link="L_leg"/>
+    <child link="L_ankle"/>
+    <origin rpy="0 0 0.0066853" xyz="0.16558 0.002107 0"/>
+    <dynamics damping="0.5"/>
+    <axis xyz="0 0 1"/>
+    <limit effort="10.0" lower="-3.14152" upper="3.14152" velocity="0.0"/>
+  </joint>
+  <transmission name="trans_JL_ankle_p" type="SimpleTransmission">
+    <actuator name="JL_ankle_p_motor">
+      <mechanicalReduction>1.0</mechanicalReduction>
+    </actuator>
+    <joint name="JL_ankle_p"/>
+  </transmission>
+  <link name="L_ankle">
+    <inertial>
+      <origin xyz="-0.016983 -0.019102 0.00028142"/>
+      <mass value="0.366"/>
+      <inertia ixx="5.7399e-05" ixy="-1.5552e-07" ixz="-1.6188e-07" iyy="8.2055e-05" iyz="9.1672e-16" izz="8.4262e-05"/>
+    </inertial>
+    <visual>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <geometry>
+        <!-- <mesh filename="file:///home/tanawat/Documents/Thesis/Thesis_simulation/Models/hanuman04/meshes/L_ankle.obj"/> -->
+      </geometry>
+    </visual>
+    <collision name="L_ankle">
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <geometry>
+        <!-- <mesh filename="file:///home/tanawat/Documents/Thesis/Thesis_simulation/Models/hanuman04/meshes/L_ankle_collision.obj"/> -->
+      </geometry>
+    </collision>
+  </link>
+  <joint name="JL_ankle_r" type="continuous">
+    <parent link="L_ankle"/>
+    <child link="L_foot"/>
+    <origin rpy="-1.5708 0 0" xyz="0 -0.0235 0"/>
+    <dynamics damping="0.5"/>
+    <axis xyz="0 0 1"/>
+    <limit effort="10.0" lower="-3.14152" upper="3.14152" velocity="0.0"/>
+  </joint>
+  <transmission name="trans_JL_ankle_r" type="SimpleTransmission">
+    <actuator name="JL_ankle_r_motor">
+      <mechanicalReduction>1.0</mechanicalReduction>
+    </actuator>
+    <joint name="JL_ankle_r"/>
+  </transmission>
+  <link name="L_foot">
+    <inertial>
+      <origin xyz="0.034965 0.016421 0.035478"/>
+      <mass value="0.14"/>
+      <inertia ixx="0.00040319" ixy="2.9724e-11" ixz="2.1519e-08" iyy="0.00026502" iyz="-4.6522e-11" izz="0.00014426"/>
+    </inertial>
+    <visual>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <geometry>
+        <!-- <mesh filename="file:///home/tanawat/Documents/Thesis/Thesis_simulation/Models/hanuman04/meshes/L_foot.obj"/> -->
+      </geometry>
+    </visual>
+    <collision name="L_foot">
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <geometry>
+        <!-- <mesh filename="file:///home/tanawat/Documents/Thesis/Thesis_simulation/Models/hanuman04/meshes/L_foot_collision.obj"/> -->
+      </geometry>
+    </collision>
+  </link>
+  <joint name="JR_hip_y" type="continuous">
+    <parent link="torso"/>
+    <child link="R_hip_connector"/>
+    <origin rpy="-3.1416 0 0" xyz="0 -0.054 0"/>
+    <dynamics damping="0.5"/>
+    <axis xyz="0 0 1"/>
+    <limit effort="10.0" lower="-3.14152" upper="3.14152" velocity="0.0"/>
+  </joint>
+  <transmission name="trans_JR_hip_y" type="SimpleTransmission">
+    <actuator name="JR_hip_y_motor">
+      <mechanicalReduction>1.0</mechanicalReduction>
+    </actuator>
+    <joint name="JR_hip_y"/>
+  </transmission>
+  <link name="R_hip_connector">
+    <inertial>
+      <origin xyz="0.0038751 -0.00022694 0.0088782"/>
+      <mass value="0.014482"/>
+      <inertia ixx="2.1782e-06" ixy="-4.5664e-11" ixz="-5.8874e-08" iyy="8.134e-06" iyz="-3.0295e-11" izz="7.6708e-06"/>
+    </inertial>
+    <visual>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <geometry>
+        <!-- <mesh filename="file:///home/tanawat/Documents/Thesis/Thesis_simulation/Models/hanuman04/meshes/R_hip_connector.obj"/> -->
+      </geometry>
+    </visual>
+  </link>
+  <joint name="JR_hip_r" type="continuous">
+    <parent link="R_hip_connector"/>
+    <child link="R_hip"/>
+    <origin rpy="0 -1.5708 0" xyz="-0.0235 -0.000 0.03"/>
+    <dynamics damping="0.5"/>
+    <axis xyz="0 0 1"/>
+    <limit effort="10.0" lower="-3.14152" upper="3.14152" velocity="0.0"/>
+  </joint>
+  <transmission name="trans_JR_hip_r" type="SimpleTransmission">
+    <actuator name="JR_hip_r_motor">
+      <mechanicalReduction>1.0</mechanicalReduction>
+    </actuator>
+    <joint name="JR_hip_r"/>
+  </transmission>
+  <link name="R_hip">
+    <inertial>
+      <origin xyz="0.016972 0.00028128 -0.0044228"/>
+      <mass value="0.366"/>
+      <inertia ixx="5.7318e-05" ixy="1.6188e-07" ixz="-1.5933e-07" iyy="8.4218e-05" iyz="1.2839e-20" izz="8.1943e-05"/>
+    </inertial>
+    <visual>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <geometry>
+        <!-- <mesh filename="file:///home/tanawat/Documents/Thesis/Thesis_simulation/Models/hanuman04/meshes/R_hip.obj"/> -->
+      </geometry>
+    </visual>
+    <collision name="R_hip">
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <geometry>
+        <!-- <mesh filename="file:///home/tanawat/Documents/Thesis/Thesis_simulation/Models/hanuman04/meshes/R_hip_collision.obj"/> -->
+      </geometry>
+    </collision>
+  </link>
+  <joint name="JR_hip_p" type="continuous">
+    <parent link="R_hip"/>
+    <child link="R_thigh"/>
+    <origin rpy="-1.5708 0 0" xyz="0 0 -0.0235"/>
+    <dynamics damping="0.5"/>
+    <axis xyz="0 0 1"/>
+    <limit effort="10.0" lower="-3.14152" upper="3.14152" velocity="0.0"/>
+  </joint>
+  <transmission name="trans_JR_hip_p" type="SimpleTransmission">
+    <actuator name="JR_hip_p_motor">
+      <mechanicalReduction>1.0</mechanicalReduction>
+    </actuator>
+    <joint name="JR_hip_p"/>
+  </transmission>
+  <link name="R_thigh">
+    <inertial>
+      <origin xyz="0.12089 -4.9823E-11 -6.217E-05"/>
+      <mass value="0.212"/>
+      <inertia ixx="4.9123e-05" ixy="-4.775e-14" ixz="-1.6188e-07" iyy="0.00011016" iyz="-8.2973e-14" izz="8.4534e-05"/>
+    </inertial>
+    <visual>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <geometry>
+        <!-- <mesh filename="file:///home/tanawat/Documents/Thesis/Thesis_simulation/Models/hanuman04/meshes/R_thigh.obj"/> -->
+      </geometry>
+    </visual>
+    <collision name="R_thigh">
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <geometry>
+        <!-- <mesh filename="file:///home/tanawat/Documents/Thesis/Thesis_simulation/Models/hanuman04/meshes/R_thigh_collision.obj"/> -->
+      </geometry>
+    </collision>
+  </link>
+  <joint name="JR_knee" type="continuous">
+    <parent link="R_thigh"/>
+    <child link="R_leg"/>
+    <origin rpy="0 0 0" xyz="0.1605 0 -0.0005"/>
+    <dynamics damping="0.5"/>
+    <axis xyz="0 0 1"/>
+    <limit effort="10.0" lower="-3.14152" upper="3.14152" velocity="0.0"/>
+  </joint>
+  <transmission name="trans_JR_knee" type="SimpleTransmission">
+    <actuator name="JR_knee_motor">
+      <mechanicalReduction>1.0</mechanicalReduction>
+    </actuator>
+    <joint name="JR_knee"/>
+  </transmission>
+  <link name="R_leg">
+    <inertial>
+      <origin xyz="0.063002 0.0090996 -0.0005"/>
+      <mass value="0.074194"/>
+      <inertia ixx="5.5482e-05" ixy="1.6295e-05" ixz="-1.0151e-19" iyy="0.00021559" iyz="4.8846e-20" izz="0.00018885"/>
+    </inertial>
+    <visual>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <geometry>
+        <!-- <mesh filename="file:///home/tanawat/Documents/Thesis/Thesis_simulation/Models/hanuman04/meshes/R_leg.obj"/> -->
+      </geometry>
+    </visual>
+  </link>
+  <joint name="JR_ankle_p" type="continuous">
+    <parent link="R_leg"/>
+    <child link="R_ankle"/>
+    <origin rpy="0 0 0.0066853" xyz="0.16558 0.002107 0"/>
+    <dynamics damping="0.5"/>
+    <axis xyz="0 0 1"/>
+    <limit effort="10.0" lower="-3.14152" upper="3.14152" velocity="0.0"/>
+  </joint>
+  <transmission name="trans_JR_ankle_p" type="SimpleTransmission">
+    <actuator name="JR_ankle_p_motor">
+      <mechanicalReduction>1.0</mechanicalReduction>
+    </actuator>
+    <joint name="JR_ankle_p"/>
+  </transmission>
+  <link name="R_ankle">
+    <inertial>
+      <origin xyz="-0.016972 -0.019077 0.00028128"/>
+      <mass value="0.366"/>
+      <inertia ixx="5.7318e-05" ixy="-1.5933e-07" ixz="-1.6188e-07" iyy="8.1943e-05" iyz="9.1672e-16" izz="8.4218e-05"/>
+    </inertial>
+    <visual>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <geometry>
+        <!-- <mesh filename="file:///home/tanawat/Documents/Thesis/Thesis_simulation/Models/hanuman04/meshes/R_ankle.obj"/> -->
+      </geometry>
+    </visual>
+    <collision name="R_ankle">
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <geometry>
+        <!-- <mesh filename="file:///home/tanawat/Documents/Thesis/Thesis_simulation/Models/hanuman04/meshes/R_ankle_collision.obj"/> -->
+      </geometry>
+    </collision>
+  </link>
+  <joint name="JR_ankle_r" type="continuous">
+    <parent link="R_ankle"/>
+    <child link="R_foot"/>
+    <origin rpy="-1.5708 0 0" xyz="0 -0.0235 0"/>
+    <dynamics damping="0.5"/>
+    <axis xyz="0 0 1"/>
+    <limit effort="10.0" lower="-3.14152" upper="3.14152" velocity="0.0"/>
+  </joint>
+  <transmission name="trans_JR_ankle_r" type="SimpleTransmission">
+    <actuator name="JR_ankle_r_motor">
+      <mechanicalReduction>1.0</mechanicalReduction>
+    </actuator>
+    <joint name="JR_ankle_r"/>
+  </transmission>
+  <link name="R_foot">
+    <inertial>
+      <origin xyz="0.034961 -0.01642 0.035474"/>
+      <mass value="0.14"/>
+      <inertia ixx="0.00040312" ixy="2.9725e-11" ixz="2.1675e-08" iyy="0.00026502" iyz="-4.652e-11" izz="0.0001442"/>
+    </inertial>
+    <visual>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <geometry>
+        <!-- <mesh filename="file:///home/tanawat/Documents/Thesis/Thesis_simulation/Models/hanuman04/meshes/R_foot.obj"/> -->
+      </geometry>
+    </visual>
+    <collision name="R_foot">
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <geometry>
+        <!-- <mesh filename="file:///home/tanawat/Documents/Thesis/Thesis_simulation/Models/hanuman04/meshes/R_foot_collision.obj"/> -->
+      </geometry>
+    </collision>
+  </link>
+  <link name="L_foot_contact"/>
+  <joint name="L_foot_contact_offset" type="fixed">
+    <parent link="L_foot"/>
+    <child link="L_foot_contact"/>
+    <origin rpy="0 -1.5705 0" xyz="0.049 0 0.0235"/>
+  </joint>
+  <link name="R_foot_contact"/>
+  <joint name="R_foot_contact_offset" type="fixed">
+    <parent link="R_foot"/>
+    <child link="R_foot_contact"/>
+    <origin rpy="0 -1.5705 0" xyz="0.049 0 0.0235"/>
+  </joint>
+  <!-- <xacro:humanoid_ros2_control name="humanoid_ros2_control"/> -->
+</robot>
