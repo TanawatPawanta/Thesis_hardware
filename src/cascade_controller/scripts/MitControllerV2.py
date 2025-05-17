@@ -101,15 +101,15 @@ class MotorControllerNode(Node):
             error_velocity = self.desired_velocity[i] - self.current_velocity[i]
             q_errors.append(error_position)
             qd_errors.append(error_velocity)
-            static_friction_ff = 0.0
-            if abs(error_position) <= 0.001:
-                error_position = 0.0 
-                static_friction_ff = 0.0
-            else:
-                if error_position >= 0.0:
-                    static_friction_ff = self.desired_effort[i]
-                elif error_position < 0.0:
-                    static_friction_ff = -1.0*self.desired_effort[i]
+            static_friction_ff = self.desired_effort[i]
+            # if abs(error_position) <= 0.001:
+            #     error_position = 0.0 
+            #     static_friction_ff = 0.0
+            # else:
+            #     if error_position >= 0.0:
+            #         static_friction_ff = self.desired_effort[i]
+            #     elif error_position < 0.0:
+            #         static_friction_ff = -1.0*self.desired_effort[i]
             self.PubJoinErrors(q_errors=q_errors,
                                qd_errors=qd_errors)
             if self.motor_series[i] == "XM540":
@@ -118,10 +118,10 @@ class MotorControllerNode(Node):
                 torque_constant = self.XM430_torque_constant
             else:
                 torque_constant = 2.0
-            tau_u = (self.kp[i] * error_position) + (self.kd[i] * error_velocity) + static_friction_ff
+            tau_u = (self.kp[i] * error_position) + (self.kd[i] * error_velocity) 
             if self.kp[i] == 0:
                 tau_u = 0.0
-            torques = self.tau_g[i] + tau_u
+            torques = self.tau_g[i] + tau_u + static_friction_ff
             iq_ref = (torques / torque_constant) 
             iq_ref = iq_ref / (0.00269)
 

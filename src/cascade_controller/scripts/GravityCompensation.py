@@ -92,12 +92,12 @@ class GravityCompensationNode(Node):
                 self.plant_double_stance.SetPositions(self.plant_double_stance_context,
                                                     -np.array(q_L)[::-1])
                 tau_g_L = self.plant_double_stance.CalcGravityGeneralizedForces(context=self.plant_double_stance_context)
-                tau_g_L = [0.45,0.45,0.45,0.45,0.45,0.45]*np.array(tau_g_L)[::-1]
+                tau_g_L = [0.45,0.45,0.2,0.45,0.45,0.45]*np.array(tau_g_L)[::-1]
                 self.plant_double_stance.SetPositions(self.plant_double_stance_context,
                                                     -np.array(q_R)[::-1])
                 tau_g_R = self.plant_double_stance.CalcGravityGeneralizedForces(context=self.plant_double_stance_context)
                 # [0.3,0.3,0.3,0.3,0.3,0.3] [0.5,0.5,0.5,0.5,0.7,0.6]
-                tau_g_R = [0.45,0.45,0.45,0.45,0.45,0.45]* np.array(tau_g_R)[::-1]
+                tau_g_R = [0.45,0.45,0.2,0.45,0.45,0.45]* np.array(tau_g_R)[::-1]
             case("R_stance"):
                 self.plant_R_fixed.SetPositions(self.plant_R_fixed_context, 
                                                 np.concatenate((-q_R[::-1],q_L)))

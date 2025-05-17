@@ -64,7 +64,7 @@
   </transmission>
   <link name="L_hip">
     <inertial>
-      <origin xyz="0.016989 0.00028142 -0.0043984"/>
+      <origin xyz="0.014 -0.021 0.0"/>
       <mass value="0.366"/>
       <inertia ixx="5.7399e-05" ixy="1.6188e-07" ixz="-1.5552e-07" iyy="8.4262e-05" iyz="-7.6867e-21" izz="8.2055e-05"/>
     </inertial>

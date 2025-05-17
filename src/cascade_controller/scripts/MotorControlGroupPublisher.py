@@ -71,8 +71,6 @@ class MotorControlGroupPublisher(Node):
         self.current_velocity   = [0.0] * self.num_motors
         self.current_effort     = [0.0] * self.num_motors
 
-        self.statics_frictions_ff = [0.14,0.14,0.14,0.14,0.14,0.2,  # L
-                                     0.14,0.14,0.14,0.14,0.14,0.2]  # R
         self.ind = 0
         self.L_leg_q  = self.q_init_L[:,self.ind]
         self.R_leg_q  = self.q_init_R[:,self.ind]
@@ -86,7 +84,21 @@ class MotorControlGroupPublisher(Node):
         self.operation_state = "disable_controller"
         self.home_state = "init_trajectories"
         self.home_interval = 3.0 # [sec]
-
+        # Damping
+        self.B = [0.0, 0.0, 0.0, 0.1, 0.1, 0.00,  # L
+                  0.0, 0.0, 0.0, 0.1, 0.1, 0.00]  # R
+        # kinetics friction
+        gain = 2
+        self.Tc = [0.0, 0.0, 0.0048*(0.5*gain), 0.0048*(0.5*1), 0.0048*(0.5*gain), 0.00,  # L
+                   0.0, 0.0, 0.0048*(0.5*gain), 0.0048*(0.5*1), 0.0048*(0.5*gain), 0.00]  # R
+        # Statics friction
+        
+        self.Ts = [0.0, 0.0, 0.0048*25, 0.0048*20, 0.0048*20, 0.00,  # L
+                   0.0, 0.0, 0.0048*25, 0.0048*20, 0.0048*20, 0.00]  # R  
+        
+        self.vs = [0.001, 0.001, 0.01, 0.001, 0.0001, 0.001,  # L
+                   0.001, 0.001, 0.01, 0.001, 0.0001, 0.001]  # R
+        self.frictions_ff = np.zeros(self.num_motors)
     def joint_state_callback(self, msg: JointState):
         for i, joint_name in enumerate(msg.name):
             if i < self.num_motors:
@@ -201,68 +213,29 @@ class MotorControlGroupPublisher(Node):
         qd_desire = np.concatenate((np.array([self.L_leg_qd]), np.array([self.R_leg_qd])),axis=1)
         motor_ids = [1,2,3,4,5,6,11,12,13,14,15,16]
         if self.controller_enable:
+            for id in range(self.num_motors):
+                self.frictions_ff[id] = CalcStribeckFriction(omega=self.current_velocity[id] ,
+                                                             B=self.B[id],
+                                                             Tc=self.Tc[id],
+                                                             Ts=self.Ts[id],
+                                                             vs=self.vs[id])  
+                
+                if self.current_velocity[id] == 0:  
+                    qd_error = qd_desire[0,id] - self.current_velocity[id]                                                                                                                                                                                      
+                    if qd_error > 0:
+                        self.frictions_ff[id] = self.Ts[id]
+                    elif qd_error < 0:
+                        self.frictions_ff[id] = -1.0*self.Ts[id]
 
-            kps = [0.0, 0.0, 0.0, 0.0, 0.0, 3.0,   # L
-                   0.0, 0.0, 0.0, 0.0, 0.0, 2.0]   # R
+            kps = [0.0, 0.0, 0.1, 0.0, 0.0, 0.0,   # L
+                   0.0, 0.0, 0.1, 0.0, 0.0, 0.0]   # R
             
-            kds = [0.0, 0.0, 0.0, 0.0, 0.0, 0.01,  # L
-                   0.0, 0.0, 0.0, 0.0, 0.0, 0.02
-                   
-                   
-                   
-                   
-                   
-                   
-                   
-                   
-                   
-                   
-                   
-                   
-                   
-                   
-                   
-                   
-                   
-                   
-                   
-                   
-                   
-                   
-                   
-                   
-                   
-                   
-                   
-                   
-                   
-                   
-                   
-                   
-                   
-                   
-                   
-                   
-                   
-                   
-                   
-                   
-                   
-                   
-                   
-                   
-                   
-                   
-                   
-                   
-                   
-                   
-                   
-                   
-                   ]   # R
+            kds = [0.0, 0.0, 0.0, 0.0, 0.0, 0.0,  # L
+                   0.0, 0.0, 0.0, 0.0, 0.0, 0.0]   # R
         else:
             kps = np.zeros(12)
             kds = np.zeros(12)
+            self.frictions_ff = np.zeros(self.num_motors)
         print("kps :\n", kps)
         print("kds :\n", kds)
         for id in range(len(motor_ids)):
@@ -275,7 +248,7 @@ class MotorControlGroupPublisher(Node):
             motor.control_mode = 0  
             motor.set_point.position = q_desire[0,id]
             motor.set_point.velocity = qd_desire[0,id]
-            motor.set_point.effort = self.statics_frictions_ff[id]
+            motor.set_point.effort = self.frictions_ff[id]
             motor.set_point.kp = kps[id]
             motor.set_point.kd = kds[id]
             msg.motor_controls.append(motor)
@@ -336,6 +309,33 @@ def InitCubicTrajectories(P, V, Times, n):
                                                       np.array([P[i,:]]), 
                                                       np.array([V[i,:]])))
     return trajs
+
+def CalcStribeckFriction(omega, B, Tc, Ts, vs):
+    """
+    Stribeck-extended friction model (captures the drop from static to Coulomb).
+    
+    τ_ff = B*ω + [Tc + (Ts − Tc)*exp(−(ω/vs)**2)] * sign(ω)
+    
+    Parameters
+    ----------
+    omega : float or np.ndarray
+        Joint angular velocity [rad/s].
+    B : float
+        Viscous friction coefficient [N·m·s/rad].
+    Tc : float
+        Coulomb friction torque magnitude [N·m].
+    Ts : float
+        Static (stiction) friction torque magnitude [N·m], Ts ≥ Tc.
+    vs : float
+        Stribeck velocity scale [rad/s].
+    
+    Returns
+    -------
+    tau_ff : float or np.ndarray
+        Feed-forward friction torque [N·m].
+    """
+    coulomb_term = Tc + (Ts - Tc) * np.exp(-(omega / vs)**2)
+    return B * omega + coulomb_term * np.sign(omega)
 
 def main(args=None):
     rclpy.init(args=args)
